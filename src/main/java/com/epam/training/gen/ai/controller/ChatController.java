@@ -29,6 +29,7 @@ public class ChatController {
     var prompt = input.getInput();
     log.info("Querying with input {}", prompt);
     chatHistory.addUserMessage(prompt);
+
     var response =
       chatCompletionService.getChatMessageContentsAsync(chatHistory, kernel, invocationContext).block().stream()
         .map(ChatMessageContent::getContent).collect(Collectors.joining("\n\n"));
