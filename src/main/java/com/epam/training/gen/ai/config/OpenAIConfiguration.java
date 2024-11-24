@@ -24,6 +24,8 @@ public class OpenAIConfiguration {
 
   @Value("${client-azureopenai-endpoint}") private String openAiEndpoint;
 
+  @Value("${openai-temperature:1.0}") private double temperature;
+
   /**
    * Creates an {@link OpenAIAsyncClient} bean for interacting with Azure OpenAI Service asynchronously.
    *
@@ -54,7 +56,7 @@ public class OpenAIConfiguration {
   @Bean
   public InvocationContext invocationContext() {
     return InvocationContext.builder()
-      .withPromptExecutionSettings(PromptExecutionSettings.builder().withTemperature(1.0).build()).build();
+      .withPromptExecutionSettings(PromptExecutionSettings.builder().withTemperature(temperature).build()).build();
   }
 
 }
