@@ -10,5 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ChatInputDto {
+
   private String input;
+
+  @Builder.Default private String model = "gpt-35-turbo";
+
+  @Builder.Default private float temperature = 0.8f;
 }
