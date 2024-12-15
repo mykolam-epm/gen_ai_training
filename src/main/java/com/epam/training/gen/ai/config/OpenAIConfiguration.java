@@ -4,8 +4,6 @@ import com.azure.ai.openai.OpenAIAsyncClient;
 import com.azure.ai.openai.OpenAIClientBuilder;
 import com.azure.core.credential.AzureKeyCredential;
 import com.microsoft.semantickernel.Kernel;
-import com.microsoft.semantickernel.orchestration.InvocationContext;
-import com.microsoft.semantickernel.orchestration.PromptExecutionSettings;
 import com.microsoft.semantickernel.services.chatcompletion.ChatCompletionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -45,16 +43,4 @@ public class OpenAIConfiguration {
   public Kernel kernel(ChatCompletionService chatCompletionService) {
     return Kernel.builder().withAIService(ChatCompletionService.class, chatCompletionService).build();
   }
-
-  /**
-   * Creates an {@link InvocationContext} bean with default prompt execution settings.
-   *
-   * @return an instance of {@link InvocationContext}
-   */
-  @Bean
-  public InvocationContext invocationContext() {
-    return InvocationContext.builder()
-      .withPromptExecutionSettings(PromptExecutionSettings.builder().withTemperature(1.0).build()).build();
-  }
-
 }
