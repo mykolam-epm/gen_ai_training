@@ -6,7 +6,10 @@ import com.epam.training.gen.ai.dto.ChatOutputDto;
 import com.epam.training.gen.ai.dto.EpamDialDeployments.EpamDialDeployment;
 import com.microsoft.semantickernel.Kernel;
 import com.microsoft.semantickernel.orchestration.InvocationContext;
+import com.microsoft.semantickernel.orchestration.InvocationReturnMode;
 import com.microsoft.semantickernel.orchestration.PromptExecutionSettings;
+import com.microsoft.semantickernel.orchestration.ToolCallBehavior;
+import com.microsoft.semantickernel.services.chatcompletion.AuthorRole;
 import com.microsoft.semantickernel.services.chatcompletion.ChatCompletionService;
 import com.microsoft.semantickernel.services.chatcompletion.ChatHistory;
 import com.microsoft.semantickernel.services.chatcompletion.ChatMessageContent;
@@ -34,11 +37,14 @@ public class ChatController {
   public ChatOutputDto chat(@RequestBody ChatInputDto input) {
     var prompt = input.getInput();
     log.info("Querying with input {}", prompt);
+    chatHistory.addSystemMessage(
+      "You are a helpful assistant that uses WeatherPlugin getWeather function to provide weather for given latitude+longitude");
     chatHistory.addUserMessage(prompt);
 
     var invocationContext = InvocationContext.builder().withPromptExecutionSettings(
         PromptExecutionSettings.builder().withTemperature(input.getTemperature()).withModelId(input.getModel()).build())
-      .build();
+      .withToolCallBehavior(ToolCallBehavior.allowAllKernelFunctions(true))
+      .withReturnMode(InvocationReturnMode.LAST_MESSAGE_ONLY).build();
 
     var response =
       chatCompletionService.getChatMessageContentsAsync(chatHistory, kernel, invocationContext).block().stream()
