@@ -32,15 +32,4 @@ public class OpenAIConfiguration {
     return new OpenAIClientBuilder().credential(new AzureKeyCredential(openAiKey)).endpoint(openAiEndpoint)
       .buildAsyncClient();
   }
-
-  /**
-   * Creates a {@link Kernel} bean to manage AI services and plugins.
-   *
-   * @param chatCompletionService the {@link ChatCompletionService} for handling completions
-   * @return an instance of {@link Kernel}
-   */
-  @Bean
-  public Kernel kernel(ChatCompletionService chatCompletionService) {
-    return Kernel.builder().withAIService(ChatCompletionService.class, chatCompletionService).build();
-  }
 }
