@@ -13,7 +13,6 @@ import com.microsoft.semantickernel.orchestration.ToolCallBehavior;
 import com.microsoft.semantickernel.services.chatcompletion.ChatCompletionService;
 import com.microsoft.semantickernel.services.chatcompletion.ChatHistory;
 import com.microsoft.semantickernel.services.chatcompletion.ChatMessageContent;
-import io.qdrant.client.grpc.Points.ScoredPoint;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +37,15 @@ public class ChatController {
   public ChatOutputDto chat(@RequestBody ChatInputDto input) {
     var prompt = input.getInput();
     log.info("Querying with input {}", prompt);
-    chatHistory.addSystemMessage(
-      "You are a helpful assistant that uses WeatherPlugin getWeather function to provide weather for given latitude+longitude");
+    chatHistory.addSystemMessage("");
+
+    var rag = embeddingsService.findEmbeddings(prompt);
+    if (rag != null && !rag.isEmpty()) {
+      chatHistory.addUserMessage(
+        "Use this relevant information:\n[START INFO]\n" + String.join("\n", rag)
+          + "\n[END INFO]");
+    }
+
     chatHistory.addUserMessage(prompt);
 
     var invocationContext = InvocationContext.builder().withPromptExecutionSettings(
