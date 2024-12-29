@@ -61,6 +61,7 @@ public class SemanticKernelConfiguration {
   @Bean
   public Kernel kernel(ChatCompletionService chatCompletionService, KernelPlugin kernelPlugin) {
     return Kernel.builder().withAIService(ChatCompletionService.class, chatCompletionService)
-      .withPlugin(kernelPlugin).build();
+      .withPlugin(kernelPlugin)
+      .build();
   }
 }
